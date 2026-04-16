@@ -1,0 +1,11 @@
+ {
+  "name": "my-agent",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "worker"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend"
+  }
+}
