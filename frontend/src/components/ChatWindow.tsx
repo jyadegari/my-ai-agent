@@ -1,25 +1,17 @@
 import { useChat } from '@ai-sdk/react';
 import { useRef, useEffect } from 'react';
-import { MockChatTransport } from '../mock-transport';
+import { DefaultChatTransport } from 'ai';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
 import '../styles/chat.css';
 
-// Created once outside the component so it is not re-instantiated on re-renders
-const mockTransport = new MockChatTransport();
+// Sends messages to POST /api/chat on the Cloudflare Worker.
+// Vite proxies /api → http://localhost:8787 during development.
+const transport = new DefaultChatTransport({ api: '/api/chat' });
 
-/**
- * ChatWindow — the core chat UI component.
- *
- * useChat manages all state: the message list, loading status, errors.
- * It communicates via the transport object.
- *
- * Phase 2 change: swap MockChatTransport for:
- *   new DefaultChatTransport({ api: '/api/chat' })
- */
 export default function ChatWindow() {
   const { messages, sendMessage, status } = useChat({
-    transport: mockTransport,
+    transport,
   });
 
   // Auto-scroll to the latest message

@@ -1,0 +1,7 @@
+name = "my-agent-worker"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+
+# Required: the AI SDK uses Node.js APIs (like crypto, streams) internally.
+# Without this flag the worker will crash at runtime.
+compatibility_flags = ["nodejs_compat"]
