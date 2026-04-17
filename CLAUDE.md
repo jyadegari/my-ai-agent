@@ -22,7 +22,7 @@ See @PLAN.md for the full 5-phase plan.
 - Phase 2 ✅ — Cloudflare Worker + real OpenAI streaming
 - Phase 3 ✅ — Durable Objects for chat persistence
 - Phase 4 ✅ — Web search tool via Tavily
-- Phase 5 ⬜ — AI Evaluation (Vitest + LLM-as-judge + tool-use assertions)
+- Phase 5 🟡 — AI Evaluation (Stage 1 done: manual harness + golden dataset; Stage 2 next: Braintrust)
 - Phase 6 ⬜ — Polish and deploy
 
 ## Critical notes

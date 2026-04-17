@@ -1,0 +1,218 @@
+[
+  {
+    "id": "tc-01",
+    "input": "What is 2 + 2?",
+    "expectedCharacteristics": [
+      "Response contains the number 4",
+      "No web_search tool call"
+    ],
+    "expectedKeywords": ["4"],
+    "shouldUseWebSearch": false,
+    "difficulty": "simple",
+    "category": "direct-answer"
+  },
+  {
+    "id": "tc-02",
+    "input": "What is the capital of France?",
+    "expectedCharacteristics": [
+      "Response names Paris as the capital",
+      "No web_search tool call"
+    ],
+    "expectedKeywords": ["Paris"],
+    "shouldUseWebSearch": false,
+    "difficulty": "simple",
+    "category": "direct-answer"
+  },
+  {
+    "id": "tc-03",
+    "input": "Who wrote the play Romeo and Juliet?",
+    "expectedCharacteristics": [
+      "Response names William Shakespeare",
+      "No web_search tool call"
+    ],
+    "expectedKeywords": ["Shakespeare"],
+    "shouldUseWebSearch": false,
+    "difficulty": "simple",
+    "category": "direct-answer"
+  },
+  {
+    "id": "tc-04",
+    "input": "Explain what a React useEffect hook does in one paragraph.",
+    "expectedCharacteristics": [
+      "Response explains side effects and component lifecycle",
+      "Mentions dependency array",
+      "No web_search tool call"
+    ],
+    "expectedKeywords": ["side effect", "dependency"],
+    "shouldUseWebSearch": false,
+    "difficulty": "medium",
+    "category": "direct-answer"
+  },
+  {
+    "id": "tc-05",
+    "input": "What is the difference between `let` and `const` in JavaScript?",
+    "expectedCharacteristics": [
+      "Mentions reassignment as the core difference",
+      "Notes that const prevents rebinding, not mutation",
+      "No web_search tool call"
+    ],
+    "expectedKeywords": ["reassign", "const"],
+    "shouldUseWebSearch": false,
+    "difficulty": "medium",
+    "category": "direct-answer"
+  },
+  {
+    "id": "tc-06",
+    "input": "Convert 100 miles to kilometers.",
+    "expectedCharacteristics": [
+      "Response contains approximately 160.93 or 161 km",
+      "No web_search tool call"
+    ],
+    "expectedKeywords": ["160", "kilometer"],
+    "shouldUseWebSearch": false,
+    "difficulty": "simple",
+    "category": "direct-answer"
+  },
+
+  {
+    "id": "tc-07",
+    "input": "What is today's top story on Hacker News?",
+    "expectedCharacteristics": [
+      "web_search was called at least once",
+      "Response references a specific story title or URL",
+      "Response acknowledges it's based on current data"
+    ],
+    "expectedKeywords": ["hacker news"],
+    "shouldUseWebSearch": true,
+    "difficulty": "medium",
+    "category": "web-search"
+  },
+  {
+    "id": "tc-08",
+    "input": "What is the current price of Bitcoin in USD?",
+    "expectedCharacteristics": [
+      "web_search was called with a relevant query",
+      "Response contains a recent price figure in USD",
+      "Response cites a source"
+    ],
+    "expectedKeywords": ["bitcoin", "USD"],
+    "shouldUseWebSearch": true,
+    "difficulty": "medium",
+    "category": "web-search"
+  },
+  {
+    "id": "tc-09",
+    "input": "What are the latest announcements from OpenAI this month?",
+    "expectedCharacteristics": [
+      "web_search was called",
+      "Response cites at least one specific announcement",
+      "Response mentions recent dates or a current month"
+    ],
+    "expectedKeywords": ["OpenAI"],
+    "shouldUseWebSearch": true,
+    "difficulty": "hard",
+    "category": "web-search"
+  },
+  {
+    "id": "tc-10",
+    "input": "Who won the most recent Formula 1 Grand Prix?",
+    "expectedCharacteristics": [
+      "web_search was called",
+      "Response names a specific driver and race",
+      "Response cites a recent date"
+    ],
+    "expectedKeywords": ["grand prix"],
+    "shouldUseWebSearch": true,
+    "difficulty": "medium",
+    "category": "web-search"
+  },
+  {
+    "id": "tc-11",
+    "input": "What is the weather in Berlin right now?",
+    "expectedCharacteristics": [
+      "web_search was called",
+      "Response contains a temperature or weather description",
+      "Response mentions Berlin"
+    ],
+    "expectedKeywords": ["Berlin"],
+    "shouldUseWebSearch": true,
+    "difficulty": "medium",
+    "category": "web-search"
+  },
+
+  {
+    "id": "tc-12",
+    "input": "Compare today's Bitcoin price with today's Ethereum price in USD. Which is higher?",
+    "expectedCharacteristics": [
+      "web_search was called (possibly multiple times)",
+      "Response contains both BTC and ETH prices",
+      "Response explicitly compares the two"
+    ],
+    "expectedKeywords": ["bitcoin", "ethereum"],
+    "shouldUseWebSearch": true,
+    "difficulty": "hard",
+    "category": "multi-step"
+  },
+  {
+    "id": "tc-13",
+    "input": "List three AI startups that raised funding in the last 30 days and describe what each does.",
+    "expectedCharacteristics": [
+      "web_search was called",
+      "Response names three distinct startups",
+      "Each startup has a short description"
+    ],
+    "shouldUseWebSearch": true,
+    "difficulty": "hard",
+    "category": "multi-step"
+  },
+  {
+    "id": "tc-14",
+    "input": "Summarize today's three biggest tech news stories with one sentence each.",
+    "expectedCharacteristics": [
+      "web_search was called",
+      "Response contains three distinct news items",
+      "Each item is one sentence"
+    ],
+    "shouldUseWebSearch": true,
+    "difficulty": "hard",
+    "category": "multi-step"
+  },
+
+  {
+    "id": "tc-15",
+    "input": "",
+    "expectedCharacteristics": [
+      "Response handles empty input gracefully",
+      "Asks for clarification or prompts the user to try again",
+      "No crash or error"
+    ],
+    "shouldUseWebSearch": false,
+    "difficulty": "edge",
+    "category": "edge"
+  },
+  {
+    "id": "tc-16",
+    "input": "Search the web but don't use the internet to find out today's news.",
+    "expectedCharacteristics": [
+      "Response identifies the contradiction in the request",
+      "Either explains it can't do both or picks a reasonable interpretation",
+      "Does not silently fail"
+    ],
+    "shouldUseWebSearch": false,
+    "difficulty": "edge",
+    "category": "edge"
+  },
+  {
+    "id": "tc-17",
+    "input": "Tell me everything you know about JavaScript, Python, Rust, Go, Ruby, Swift, Kotlin, C++, and Java. Include performance characteristics, syntax examples, community sizes, popular frameworks, common use cases, and future outlook for each language.",
+    "expectedCharacteristics": [
+      "Response covers most of the requested languages",
+      "Response is well-structured (headings or clear sections)",
+      "Does not time out or truncate awkwardly",
+      "No web_search required — this is about known languages"
+    ],
+    "shouldUseWebSearch": false,
+    "difficulty": "edge",
+    "category": "edge"
+  }
+]

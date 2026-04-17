@@ -1,4 +1,4 @@
- {
+{
   "name": "my-agent",
   "private": true,
   "workspaces": [
@@ -8,6 +8,13 @@
   "scripts": {
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:worker": "npm run dev --workspace=worker",
-    "dev": "npm run dev:worker & npm run dev:frontend"
+    "dev": "npm run dev:worker & npm run dev:frontend",
+    "eval": "tsx evals/run.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "@ai-sdk/openai": "^3.0.53",
+    "ai": "^6.0.0",
+    "zod": "^3.25.76"
   }
 }

@@ -20,6 +20,7 @@ export interface WebSearchResult {
 export interface WebSearchOutput {
   query: string;
   results: WebSearchResult[];
+  error?: string;
 }
 
 /**
@@ -36,33 +37,48 @@ export function createWebSearchTool(apiKey: string) {
       query: z.string().describe('The search query — keep it short and focused.'),
     }),
     execute: async ({ query }): Promise<WebSearchOutput> => {
-      const response = await fetch('https://api.tavily.com/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
+      try {
+        const response = await fetch('https://api.tavily.com/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            query,
+            max_results: 5,
+            search_depth: 'basic',
+          }),
+        });
+
+        if (!response.ok) {
+          const body = await response.text();
+          console.error('[tavily non-ok]', response.status, body);
+          return {
+            query,
+            results: [],
+            error: `Search failed (${response.status}): ${body.slice(0, 200)}`,
+          };
+        }
+
+        const data = (await response.json()) as TavilyResponse;
+
+        return {
           query,
-          max_results: 5,
-          search_depth: 'basic',
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Tavily search failed: ${response.status} ${response.statusText}`);
+          results: (data.results ?? []).map((r) => ({
+            title: r.title,
+            url: r.url,
+            snippet: r.content,
+          })),
+        };
+      } catch (err) {
+        console.error('[tavily threw]', err);
+        return {
+          query,
+          results: [],
+          error: err instanceof Error ? err.message : String(err),
+        };
       }
-
-      const data = (await response.json()) as TavilyResponse;
-
-      return {
-        query,
-        results: (data.results ?? []).map((r) => ({
-          title: r.title,
-          url: r.url,
-          snippet: r.content,
-        })),
-      };
     },
   });
 }

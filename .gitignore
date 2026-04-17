@@ -27,3 +27,6 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Eval results (timestamped JSON, regenerated on every run)
+evals/results/
