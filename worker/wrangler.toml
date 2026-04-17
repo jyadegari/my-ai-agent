@@ -5,3 +5,11 @@ compatibility_date = "2025-04-01"
 # Required: the AI SDK uses Node.js APIs (like crypto, streams) internally.
 # Without this flag the worker will crash at runtime.
 compatibility_flags = ["nodejs_compat"]
+
+[[durable_objects.bindings]]
+name = "CHAT_ROOM"
+class_name = "ChatRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ChatRoom"]

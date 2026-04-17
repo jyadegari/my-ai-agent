@@ -171,7 +171,56 @@ my-agent/
 
 ---
 
-## Phase 5: Polish and Deploy
+## Phase 5: AI Evaluation
+
+**Goal:** Systematically test whether the agent behaves correctly — does it answer well, call tools when it should, and avoid mistakes?
+
+**You'll learn:** What AI evals are and why they matter, the three types of evals (deterministic, LLM-as-judge, tool-use trajectory), how to write test cases, how `MockLanguageModelV1` from the AI SDK lets you test without real API calls.
+
+**What you'll see:** A `npm run eval` command that runs a suite of test cases and reports pass/fail scores for response quality, tool use accuracy, and regressions.
+
+### Key concepts
+
+- **Deterministic eval**: assert exact things — did it call the right tool? Did it not call tools for simple math?
+- **LLM-as-judge**: use GPT-4o to score free-text responses (helpfulness, accuracy, relevance) on a 1–10 scale
+- **Regression eval**: save good responses as golden files; fail if future runs drift significantly
+
+### Prerequisites (your action)
+
+No new accounts needed. Uses Vitest (standard TypeScript test runner) and the AI SDK's built-in mock utilities.
+
+### Steps
+
+1. Install dev dependencies: `vitest`, `@ai-sdk/provider-utils` (has `MockLanguageModelV1`)
+2. Create `evals/` directory at project root:
+   - `evals/cases.ts` — array of test cases: `{ input, shouldUseWebSearch, description }`
+   - `evals/scorers/tool-use.ts` — checks if Tavily was called when expected
+   - `evals/scorers/llm-judge.ts` — calls GPT-4o to rate response quality (1–10)
+   - `evals/agent.eval.ts` — the actual Vitest test file
+3. Update `worker/src/index.ts` to export the core agent logic as a testable function (separate from the HTTP handler)
+4. Add `"eval": "vitest run evals/"` script to root `package.json`
+5. Run evals: `npm run eval` — see pass/fail for each test case
+
+### What to test
+
+| Test case | Eval type | Pass condition |
+|-----------|-----------|----------------|
+| "What's 2 + 2?" | Deterministic | No tool calls; answer contains "4" |
+| "Latest AI news today?" | Tool-use | `web_search` tool was called |
+| "Who is the president of France?" | LLM-as-judge | Quality score ≥ 7/10 |
+| Previous good responses | Regression | Output similarity ≥ 80% |
+
+### Key files
+
+- `evals/cases.ts` — test case definitions
+- `evals/agent.eval.ts` — Vitest test suite
+- `evals/scorers/tool-use.ts` — tool call assertions
+- `evals/scorers/llm-judge.ts` — GPT-4o quality scoring
+- `worker/src/agent.ts` — extracted agent logic (testable without HTTP layer)
+
+---
+
+## Phase 6: Polish and Deploy
 
 **Goal:** Production-ready deployment on Cloudflare's global network.
 
@@ -201,7 +250,8 @@ After each phase, verify:
 | 2 | Type a question, get a real GPT response streamed back |
 | 3 | Send messages, refresh page, verify history persists. Create multiple conversations. |
 | 4 | Ask "What's the latest news about AI?" — see search tool activated, results displayed |
-| 5 | Visit the deployed URL, full flow works on a live domain |
+| 5 | Run `npm run eval` — all test cases pass, scores reported in terminal |
+| 6 | Visit the deployed URL, full flow works on a live domain |
 
 ## Important Notes
 

@@ -1,27 +1,40 @@
 import { useChat } from '@ai-sdk/react';
-import { useRef, useEffect } from 'react';
-import { DefaultChatTransport } from 'ai';
+import { useRef, useEffect, useMemo } from 'react';
+import { DefaultChatTransport, type UIMessage } from 'ai';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
 import '../styles/chat.css';
 
-// Sends messages to POST /api/chat on the Cloudflare Worker.
-// Vite proxies /api → http://localhost:8787 during development.
-const transport = new DefaultChatTransport({ api: '/api/chat' });
+interface Props {
+  conversationId: string;
+  initialMessages: UIMessage[];
+  onFirstMessage?: (text: string) => void;
+}
 
-export default function ChatWindow() {
+export default function ChatWindow({ conversationId, initialMessages, onFirstMessage }: Props) {
+  const transport = useMemo(
+    () => new DefaultChatTransport({ api: '/api/chat', body: { conversationId } }),
+    [conversationId],
+  );
+
   const { messages, sendMessage, status } = useChat({
     transport,
+    messages: initialMessages,
   });
 
-  // Auto-scroll to the latest message
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Disable input while waiting for first token or while streaming
   const isResponding = status === 'submitted' || status === 'streaming';
+
+  const handleSend = (text: string) => {
+    if (messages.length === 0 && onFirstMessage) {
+      onFirstMessage(text);
+    }
+    sendMessage({ text });
+  };
 
   return (
     <div className="chat-window">
@@ -36,7 +49,6 @@ export default function ChatWindow() {
           <MessageBubble key={message.id} message={message} />
         ))}
 
-        {/* Three-dot typing indicator while waiting for the first streamed token */}
         {status === 'submitted' && (
           <div className="message assistant">
             <div className="bubble typing-indicator">
@@ -50,10 +62,7 @@ export default function ChatWindow() {
         <div ref={bottomRef} />
       </div>
 
-      <ChatInput
-        onSend={(text) => sendMessage({ text })}
-        disabled={isResponding}
-      />
+      <ChatInput onSend={handleSend} disabled={isResponding} />
     </div>
   );
 }
